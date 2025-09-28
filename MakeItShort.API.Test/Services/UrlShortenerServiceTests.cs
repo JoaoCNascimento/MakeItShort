@@ -71,12 +71,12 @@ namespace MakeItShort.API.Test.Services
         }
 
         [Fact]
-        public async Task DeleteUrlAsync_ShouldThrow_WhenNoRowsDeleted()
+        public async Task DeleteUrlAsync_ShouldSucced_WhenNoRowsDeleted()
         {
             _repositoryMock.Setup(r => r.DeleteUrlAsync("abc"))
                 .ReturnsAsync(0);
 
-            await Assert.ThrowsAsync<KeyNotFoundException>(() => _service.DeleteUrlAsync("abc"));
+            await _service.DeleteUrlAsync("abc");
         }
 
         [Fact]
