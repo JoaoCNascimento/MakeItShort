@@ -13,13 +13,11 @@ No diretório raiz do projeto, executar os comandos:
 ### Windows (PowerShell ou CMD)
 
 ```
-docker compose build
 docker compose up -d
 ```
 
 ### Linux / macOS (Terminal)
 ```
-docker compose build
 docker compose up -d
 ```
 
