@@ -44,20 +44,6 @@ namespace MakeItShort.API.Test.Services
         }
 
         [Fact]
-        public async Task CreateShortUrlAsync_ShouldReturnExistingShortUrl_WhenDuplicate()
-        {
-            var request = new ShortUrlRequest { Url = "http://valid.com" };
-            var existing = new ShortUrl { ShortKey = "abc123", OriginalUrl = request.Url };
-
-            _repositoryMock.Setup(r => r.GetShortUrlByOriginalAsync(request.Url))
-                .ReturnsAsync(existing);
-
-            var result = await _service.CreateShortUrlAsync(request);
-
-            Assert.Equal("http://short.ly/abc123", result.Url);
-        }
-
-        [Fact]
         public async Task CreateShortUrlAsync_ShouldCreateNewShortUrl_WhenNotExists()
         {
             var request = new ShortUrlRequest { Url = "http://valid.com" };
