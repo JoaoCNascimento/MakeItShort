@@ -71,7 +71,10 @@ namespace MakeItShort.API.Repository
             {
                 var updatedRows = await _context.ShortUrls
                     .Where(e => e.ShortKey == shortKey)
-                    .ExecuteUpdateAsync(setters => setters.SetProperty(e => e.Hits, e => e.Hits + 1));
+                    .ExecuteUpdateAsync(setters =>
+                        setters
+                            .SetProperty(e => e.Hits, e => e.Hits + 1)
+                            .SetProperty(e => e.UpdatedAt, e => DateTime.UtcNow));
 
                 return updatedRows > 0;
             }
