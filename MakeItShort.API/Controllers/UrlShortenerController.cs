@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using MakeItShort.API.Domain.Request;
 using MakeItShort.API.Domain.Response;
 using MakeItShort.API.Services.Interfaces;
@@ -91,6 +90,11 @@ public class UrlShortenerController : ControllerBase
         try
         {
             await _service.DeleteUrlAsync(shortKey);
+            return NoContent();
+        }
+        catch (KeyNotFoundException)
+        {
+            _logger.LogInformation("No resource found for key \"{shortKey}\"", shortKey);
             return NoContent();
         }
         catch (ArgumentException ex)
