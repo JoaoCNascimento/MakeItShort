@@ -25,6 +25,13 @@ Após isso, a API estará disponível em: http://localhost:5000
 
 > **Opcional:** Postman ou Insomnia para testar a API. Importe as rotas do arquivo "v1.json", localizado no diretório: docs.
 
+Para refletir alterações do código no Docker, executar:
+
+```
+docker compose build
+docker compose up -d
+```
+
 ## Ferramentas necessárias para desenvolvimento
 
 Para manter ou desenvolver o projeto, você precisará de:
