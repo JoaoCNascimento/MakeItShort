@@ -38,11 +38,10 @@ public class UrlShortenerService(IUrlShortenerRepository repository, IConfigurat
         if (request == null || string.IsNullOrWhiteSpace(request.Url))
             throw new ArgumentException("URL request cannot be null or empty.");
 
-        // Validate HTTP/HTTPS URL
         ValidateUrl(request.Url);
         // Deduplication: Check if URL already exists and returns it
         var existing = await _repository.GetShortUrlByOriginalAsync(request.Url);
-        if (existing is not null) return new ShortUrlResponse(_baseUrl + existing.ShortKey);
+        if (existing is not null) return new ShortUrlResponse($"{_baseUrl}/{existing.ShortKey}");
 
         string shortKey = await GenerateUniqueShortKeyAsync();
 
@@ -54,7 +53,7 @@ public class UrlShortenerService(IUrlShortenerRepository repository, IConfigurat
 
         var result = await _repository.CreateShortUrlAsync(shortUrl);
 
-        return new ShortUrlResponse(_baseUrl + result.ShortKey);
+        return new ShortUrlResponse($"{_baseUrl}/{result.ShortKey}");
     }
 
     public async Task DeleteUrlAsync(string shortKey)

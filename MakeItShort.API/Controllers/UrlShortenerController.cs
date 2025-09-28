@@ -24,7 +24,7 @@ public class UrlShortenerController : ControllerBase
         return Ok("MakeItShort API Version 1.0");
     }
 
-    [HttpPost()]
+    [HttpPost]
     public async Task<IActionResult> CreateShortUrlAsync(ShortUrlRequest request)
     {
         try
