@@ -17,7 +17,7 @@ namespace MakeItShort.API.Test.Services
             _repositoryMock = new Mock<IUrlShortenerRepository>();
 
             var inMemorySettings = new Dictionary<string, string> {
-                {"Shortener:BaseUrl", "http://short.ly/"}
+                {"Shortener:BaseUrl", "http://short.ly"}
             };
 
             IConfiguration configuration = new ConfigurationBuilder()
@@ -146,7 +146,6 @@ namespace MakeItShort.API.Test.Services
         // ------------------------
         // ResolveUrlAsync
         // ------------------------
-
         [Fact]
         public async Task ResolveUrlAsync_ShouldThrow_WhenShortKeyIsNull()
         {
@@ -163,20 +162,7 @@ namespace MakeItShort.API.Test.Services
         }
 
         [Fact]
-        public async Task ResolveUrlAsync_ShouldThrow_WhenUpdateFails()
-        {
-            var shortUrl = new ShortUrl { ShortKey = "abc", OriginalUrl = "http://valid.com" };
-
-            _repositoryMock.Setup(r => r.GetShortUrlAsync("abc"))
-                .ReturnsAsync(shortUrl);
-            _repositoryMock.Setup(r => r.UpdateHitCountAsync("abc"))
-                .ReturnsAsync(false);
-
-            await Assert.ThrowsAsync<InvalidOperationException>(() => _service.ResolveUrlAsync("abc"));
-        }
-
-        [Fact]
-        public async Task ResolveUrlAsync_ShouldReturnOriginalUrl_WhenSuccessful()
+        public async Task ResolveUrlAsync_ShouldReturnOriginalUrl_AndTriggerUpdate_WhenSuccessful()
         {
             var shortUrl = new ShortUrl { ShortKey = "abc", OriginalUrl = "http://valid.com" };
 
@@ -188,6 +174,23 @@ namespace MakeItShort.API.Test.Services
             var result = await _service.ResolveUrlAsync("abc");
 
             Assert.Equal(shortUrl.OriginalUrl, result);
+            _repositoryMock.Verify(r => r.UpdateHitCountAsync("abc"), Times.Once());
+        }
+
+        [Fact]
+        public async Task ResolveUrlAsync_ShouldReturnOriginalUrl_EvenIfUpdateFails()
+        {
+            var shortUrl = new ShortUrl { ShortKey = "abc", OriginalUrl = "http://valid.com" };
+
+            _repositoryMock.Setup(r => r.GetShortUrlAsync("abc"))
+                .ReturnsAsync(shortUrl);
+            _repositoryMock.Setup(r => r.UpdateHitCountAsync("abc"))
+                .ReturnsAsync(false);
+
+            var result = await _service.ResolveUrlAsync("abc");
+
+            Assert.Equal(shortUrl.OriginalUrl, result);
+            _repositoryMock.Verify(r => r.UpdateHitCountAsync("abc"), Times.Once());
         }
     }
 }

@@ -59,7 +59,7 @@ public class UrlShortenerService(IUrlShortenerRepository repository, IConfigurat
     public async Task DeleteUrlAsync(string shortKey)
     {
         if (string.IsNullOrWhiteSpace(shortKey))
-            throw new ArgumentException("Short key cannot be null or empty.", nameof(shortKey));
+        throw new ArgumentException("Short key cannot be null or empty.", nameof(shortKey));
 
         var deletedRows = await _repository.DeleteUrlAsync(shortKey);
         if (deletedRows == 0)
@@ -88,12 +88,14 @@ public class UrlShortenerService(IUrlShortenerRepository repository, IConfigurat
         if (string.IsNullOrWhiteSpace(shortKey))
             throw new ArgumentException("Short key cannot be null or empty.", nameof(shortKey));
 
-        var shortUrl = await _repository.GetShortUrlAsync(shortKey) ?? throw new KeyNotFoundException($"No URL found with short key {shortKey}.");
+        var shortUrl = await _repository.GetShortUrlAsync(shortKey) 
+            ?? throw new KeyNotFoundException($"No URL found with short key {shortKey}.");
 
-        var updated = await _repository.UpdateHitCountAsync(shortKey);
-
-        if (!updated)
-            throw new InvalidOperationException($"Failed to update hit count for short key {shortKey}.");
+        _ = _repository.UpdateHitCountAsync(shortKey).ContinueWith(task =>
+        {
+            if (!task.Result)
+                throw new InvalidOperationException($"Failed to update hit count for short key {shortKey}.");
+        }, TaskContinuationOptions.OnlyOnFaulted);
 
         return shortUrl.OriginalUrl;
     }
