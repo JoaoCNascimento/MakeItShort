@@ -60,7 +60,10 @@ public class UrlShortenerService(IUrlShortenerRepository repository, IConfigurat
     {
         if (string.IsNullOrWhiteSpace(shortKey)) throw new ArgumentException("Short key cannot be null or empty.", nameof(shortKey));
 
-        _ = await _repository.DeleteUrlAsync(shortKey);
+        int updatedRows = await _repository.DeleteUrlAsync(shortKey);
+
+        if (updatedRows == 0)
+            throw new KeyNotFoundException();
     }
 
     public async Task<GetUrlMetadataResponse> GetUrlMetadataAsync(string shortKey)

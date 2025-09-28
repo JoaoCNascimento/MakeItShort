@@ -36,10 +36,25 @@ namespace MakeItShort.API.Test.Services
             await Assert.ThrowsAsync<ArgumentException>(() => _service.CreateShortUrlAsync(null));
         }
 
-        [Fact]
-        public async Task CreateShortUrlAsync_ShouldThrow_WhenUrlIsInvalid()
+        [Theory]
+        [InlineData("htp://example.com")]          // wrong schema
+        [InlineData("http:/example.com")]          // single slash
+        [InlineData("://missing-schema.com")]      // no schema
+        [InlineData("http:// space-in-url.com")]   // space before domain
+        [InlineData("http://exa mple.com")]        // space inside
+        [InlineData("http://example..com")]        // double dot
+        [InlineData("http://.com")]                // missing domain part
+        [InlineData("http://#fragment-only")]      // fragment only
+        [InlineData("http://?query-only")]         // query only
+        [InlineData("http://example.com:99999")]   // invalid port
+        [InlineData("http://example.com:-80")]     // negative port
+        [InlineData("ftp//missing-colon.com")]     // malformed ftp schema
+        [InlineData("http://example .com")]        // space after domain
+        [InlineData("http://%gh&%ij.com")]         // invalid percent encoding
+        [InlineData("http:///example.com")]        // triple slash
+        public async Task CreateShortUrlAsync_ShouldThrow_WhenUrlIsInvalid(string url)
         {
-            var request = new ShortUrlRequest { Url = "invalid-url" };
+            var request = new ShortUrlRequest { Url = url };
             await Assert.ThrowsAsync<ArgumentException>(() => _service.CreateShortUrlAsync(request));
         }
 
@@ -76,7 +91,7 @@ namespace MakeItShort.API.Test.Services
             _repositoryMock.Setup(r => r.DeleteUrlAsync("abc"))
                 .ReturnsAsync(0);
 
-            await _service.DeleteUrlAsync("abc");
+            _ = await Assert.ThrowsAsync<KeyNotFoundException>(() => _service.DeleteUrlAsync("abc"));
         }
 
         [Fact]
