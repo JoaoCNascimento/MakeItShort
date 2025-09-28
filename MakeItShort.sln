@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeItShort.API", "MakeItShort.API\MakeItShort.API.csproj", "{A0A45643-4DB0-6B9A-6CD1-90D70D7B48AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeItShort.API.Test", "MakeItShort.API.Test\MakeItShort.API.Test.csproj", "{424D25AD-319E-F317-6409-562902796A9D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A0A45643-4DB0-6B9A-6CD1-90D70D7B48AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0A45643-4DB0-6B9A-6CD1-90D70D7B48AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0A45643-4DB0-6B9A-6CD1-90D70D7B48AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0A45643-4DB0-6B9A-6CD1-90D70D7B48AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{424D25AD-319E-F317-6409-562902796A9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{424D25AD-319E-F317-6409-562902796A9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{424D25AD-319E-F317-6409-562902796A9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{424D25AD-319E-F317-6409-562902796A9D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

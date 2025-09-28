@@ -1,0 +1,69 @@
+# version: "3.9"
+
+# services:
+#   api:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     container_name: makeitshort_api
+#     ports:
+#       - "5000:8080"
+#     environment:
+#       - ASPNETCORE_ENVIRONMENT=Development
+#       - ConnectionStrings__DefaultConnection=Host=db;Database=makeitshort;Username=postgres;Password=postgres
+#       - DOTNET_URLS=http://0.0.0.0:8080
+#     depends_on:
+#       - database
+
+#   database:
+#     image: postgres:16
+#     container_name: makeitshort_database
+#     restart: always
+#     environment:
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: postgres
+#       POSTGRES_DB: makeitshort
+#     ports:
+#       - "5432:5432"
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+
+# volumes:
+#   postgres_data:
+
+version: "3.9"
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: makeitshort_api
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=makeitshort_database;Database=makeitshort;Username=postgres;Password=postgres
+      - DOTNET_URLS=http://0.0.0.0:8080
+    depends_on:
+      database:
+        condition: service_healthy
+
+  database:
+    image: postgres:16
+    container_name: makeitshort_database
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: makeitshort
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+volumes:
+  postgres_data:
