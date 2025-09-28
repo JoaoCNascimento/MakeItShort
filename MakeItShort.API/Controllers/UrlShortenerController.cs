@@ -59,9 +59,9 @@ public class UrlShortenerController : ControllerBase
         }
         catch (Exception ex)
         {
-            string errorMessage = "An error has ocurred while resolving the short url";
-            _logger.LogError(errorMessage, ex);
-            return StatusCode(StatusCodes.Status500InternalServerError, errorMessage);
+            string message = "An error has ocurred while resolving the short url";
+            _logger.LogError("{message}. {errorMessage}", message, ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, message);
         }
     }
 
@@ -88,7 +88,20 @@ public class UrlShortenerController : ControllerBase
     [HttpDelete("{shortKey}")]
     public async Task<IActionResult> DeleteUrl(string shortKey)
     {
-        await _service.DeleteUrlAsync(shortKey);
-        return NoContent();
+        try
+        {
+            await _service.DeleteUrlAsync(shortKey);
+            return NoContent();
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception)
+        {
+            string message = "An error has ocurred while deleting the resource";
+            _logger.LogError("{message}", message);
+            return StatusCode(StatusCodes.Status500InternalServerError, message);
+        }
     }
 }

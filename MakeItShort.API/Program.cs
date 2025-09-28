@@ -1,3 +1,4 @@
+using DotNetEnv;
 using MakeItShort.API.Repository;
 using MakeItShort.API.Repository.Interfaces;
 using MakeItShort.API.Services;
@@ -9,6 +10,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 builder.Services.AddControllers();
+
+if (builder.Environment.IsDevelopment())
+{
+    Env.Load("../.env");
+    builder.Configuration.AddEnvironmentVariables();
+}
 
 builder.Services.AddDbContext<MakeItShortDbContext>(options =>
 {
@@ -23,6 +30,7 @@ builder.Services.AddScoped<IUrlShortenerRepository, UrlShortenerRepository>();
 
 var app = builder.Build();
 
+// Apply migrations
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<MakeItShortDbContext>();
