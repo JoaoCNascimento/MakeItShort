@@ -32,4 +32,4 @@ Para manter ou desenvolver o projeto, você precisará de:
 - Docker Desktop
 - Git
 
-> **Opcional:** Postman ou Insomnia para testar a API.
+> **Opcional:** Postman ou Insomnia para testar a API. Importe as rotas do arquivo "v1.json", localizado no diretório: docs.
